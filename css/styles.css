@@ -1,0 +1,140 @@
+/* ============================================================
+   RESET & BASE STYLES
+   ============================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #1a1a2e;
+  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.container { text-align: center; width: 400px; }
+h1 { font-size: 20px; color: #888; margin-bottom: 20px; letter-spacing: 4px; text-transform: uppercase; }
+
+/* ============================================================
+   MODE TABS (Focus / Short Break / Long Break)
+   ============================================================ */
+.tabs { display: flex; gap: 8px; justify-content: center; margin-bottom: 30px; }
+.tab {
+  padding: 8px 18px;
+  border-radius: 20px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+.tab.active-work { background: #e74c3c; color: #fff; }
+.tab.active-short { background: #27ae60; color: #fff; }
+.tab.active-long { background: #2980b9; color: #fff; }
+.tab:not([class*="active"]) { background: #2a2a3e; color: #888; }
+.tab:hover:not([class*="active"]) { background: #333; color: #fff; }
+
+/* ============================================================
+   CIRCULAR TIMER RING (SVG-based progress arc)
+   ============================================================ */
+.timer-ring { position: relative; width: 280px; height: 280px; margin: 0 auto 30px; }
+svg { transform: rotate(-90deg); }
+.ring-bg { fill: none; stroke: #2a2a3e; stroke-width: 6; }
+.ring-progress { fill: none; stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 0.5s linear; }
+.ring-work { stroke: #e74c3c; }
+.ring-short { stroke: #27ae60; }
+.ring-long { stroke: #2980b9; }
+.timer-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.time { font-size: 64px; font-weight: 300; letter-spacing: 4px; font-variant-numeric: tabular-nums; }
+.label { font-size: 14px; color: #888; margin-top: 4px; }
+
+/* ============================================================
+   CONTROL BUTTONS (Reset, Start/Pause, Skip)
+   ============================================================ */
+.controls { display: flex; gap: 12px; justify-content: center; margin-bottom: 25px; }
+.btn {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  border: 2px solid #444;
+  background: transparent;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.btn:hover { border-color: #fff; transform: scale(1.1); }
+.btn-start { width: 160px; border-radius: 28px; font-size: 16px; letter-spacing: 3px; }
+.btn-start.work { border-color: #e74c3c; }
+.btn-start.work:hover { background: #e74c3c; }
+.btn-start.short { border-color: #27ae60; }
+.btn-start.short:hover { background: #27ae60; }
+.btn-start.long { border-color: #2980b9; }
+.btn-start.long:hover { background: #2980b9; }
+.btn-start.running { background: #444; border-color: #444; }
+
+/* ============================================================
+   SESSION DOTS & STATS
+   ============================================================ */
+.sessions { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; }
+.dot { width: 12px; height: 12px; border-radius: 50%; background: #2a2a3e; border: 1px solid #444; }
+.dot.done { background: #e74c3c; border-color: #e74c3c; }
+.stats { font-size: 12px; color: #555; }
+
+/* ============================================================
+   TASK LIST
+   ============================================================ */
+.task-input { margin-bottom: 20px; display: flex; gap: 8px; justify-content: center; }
+.task-input input {
+  background: #2a2a3e; border: 1px solid #444; color: #fff;
+  padding: 8px 16px; border-radius: 20px; font-size: 14px;
+  width: 240px; font-family: inherit; outline: none;
+}
+.task-input input:focus { border-color: #888; }
+.task-input input::placeholder { color: #555; }
+.task-input button {
+  background: #2a2a3e; border: 1px solid #444; color: #fff;
+  padding: 8px 14px; border-radius: 20px; cursor: pointer; font-size: 14px;
+}
+.task-input button:hover { border-color: #fff; }
+.task-list { max-width: 340px; margin: 0 auto 20px; text-align: left; max-height: 180px; overflow-y: auto; }
+.task-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 12px; border-radius: 8px; margin-bottom: 4px;
+  background: #2a2a3e; font-size: 13px;
+}
+.task-item.done span { text-decoration: line-through; color: #555; }
+.task-item input[type="checkbox"] { accent-color: #e74c3c; cursor: pointer; width: 16px; height: 16px; }
+.task-item span { flex: 1; }
+.task-item .del { background: none; border: none; color: #555; cursor: pointer; font-size: 14px; padding: 0 4px; }
+.task-item .del:hover { color: #e74c3c; }
+
+/* ============================================================
+   SETTINGS PANEL
+   ============================================================ */
+.settings { margin-bottom: 20px; }
+.settings-toggle {
+  background: none; border: 1px solid #333; color: #666;
+  font-size: 11px; padding: 4px 12px; border-radius: 12px;
+  cursor: pointer; font-family: inherit;
+}
+.settings-toggle:hover { color: #fff; border-color: #888; }
+.settings-panel { display: none; margin-top: 10px; background: #2a2a3e; padding: 12px 16px; border-radius: 10px; }
+.settings-panel.open { display: block; }
+.setting-row {
+  display: flex; justify-content: space-between; align-items: center;
+  margin: 6px 0; font-size: 12px; color: #aaa;
+}
+.setting-row input {
+  width: 60px; background: #1a1a2e; border: 1px solid #444; color: #fff;
+  padding: 4px 8px; border-radius: 8px; text-align: center;
+  font-size: 12px; font-family: inherit;
+}
+.setting-row input:focus { outline: none; border-color: #888; }
+.settings-panel button {
+  margin-top: 8px; background: #444; border: none; color: #fff;
+  padding: 6px 16px; border-radius: 12px; cursor: pointer;
+  font-size: 11px; font-family: inherit;
+}
+.settings-panel button:hover { background: #666; }

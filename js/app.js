@@ -12,6 +12,7 @@ loadSettings();
 
 // Render all UI components
 renderTasks();
+renderMetrics();
 updateDisplay();
 updateRing();
 updateSessions();

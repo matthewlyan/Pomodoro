@@ -78,6 +78,8 @@ function tick() {
       sessionsCompleted++;
       totalToday++;
       localStorage.setItem('pomo_today', totalToday);
+      // Log the completed session duration to metrics
+      logSession(Math.round(MODES.work.time / 60));
       // Every 4th session gets a long break instead of short
       if (sessionsCompleted % 4 === 0) setMode('long');
       else setMode('short');

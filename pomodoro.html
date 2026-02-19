@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pomodoro Timer</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #1a1a2e; color: #fff; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; }
+  .container { text-align: center; width: 400px; }
+  h1 { font-size: 20px; color: #888; margin-bottom: 20px; letter-spacing: 4px; text-transform: uppercase; }
+  .tabs { display: flex; gap: 8px; justify-content: center; margin-bottom: 30px; }
+  .tab { padding: 8px 18px; border-radius: 20px; border: none; font-size: 14px; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+  .tab.active-work { background: #e74c3c; color: #fff; }
+  .tab.active-short { background: #27ae60; color: #fff; }
+  .tab.active-long { background: #2980b9; color: #fff; }
+  .tab:not([class*="active"]) { background: #2a2a3e; color: #888; }
+  .tab:hover:not([class*="active"]) { background: #333; color: #fff; }
+  .timer-ring { position: relative; width: 280px; height: 280px; margin: 0 auto 30px; }
+  svg { transform: rotate(-90deg); }
+  .ring-bg { fill: none; stroke: #2a2a3e; stroke-width: 6; }
+  .ring-progress { fill: none; stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 0.5s linear; }
+  .ring-work { stroke: #e74c3c; }
+  .ring-short { stroke: #27ae60; }
+  .ring-long { stroke: #2980b9; }
+  .timer-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  .time { font-size: 64px; font-weight: 300; letter-spacing: 4px; font-variant-numeric: tabular-nums; }
+  .label { font-size: 14px; color: #888; margin-top: 4px; }
+  .controls { display: flex; gap: 12px; justify-content: center; margin-bottom: 25px; }
+  .btn { width: 56px; height: 56px; border-radius: 50%; border: 2px solid #444; background: transparent; color: #fff; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .btn:hover { border-color: #fff; transform: scale(1.1); }
+  .btn-start { width: 160px; border-radius: 28px; font-size: 16px; letter-spacing: 3px; }
+  .btn-start.work { border-color: #e74c3c; }
+  .btn-start.work:hover { background: #e74c3c; }
+  .btn-start.short { border-color: #27ae60; }
+  .btn-start.short:hover { background: #27ae60; }
+  .btn-start.long { border-color: #2980b9; }
+  .btn-start.long:hover { background: #2980b9; }
+  .btn-start.running { background: #444; border-color: #444; }
+  .sessions { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; background: #2a2a3e; border: 1px solid #444; }
+  .dot.done { background: #e74c3c; border-color: #e74c3c; }
+  .stats { font-size: 12px; color: #555; }
+  .task-input { margin-bottom: 20px; display: flex; gap: 8px; justify-content: center; }
+  .task-input input { background: #2a2a3e; border: 1px solid #444; color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 14px; width: 240px; font-family: inherit; outline: none; }
+  .task-input input:focus { border-color: #888; }
+  .task-input input::placeholder { color: #555; }
+  .task-input button { background: #2a2a3e; border: 1px solid #444; color: #fff; padding: 8px 14px; border-radius: 20px; cursor: pointer; font-size: 14px; }
+  .task-input button:hover { border-color: #fff; }
+  .task-list { max-width: 340px; margin: 0 auto 20px; text-align: left; max-height: 180px; overflow-y: auto; }
+  .task-item { display: flex; align-items: center; gap: 10px; padding: 6px 12px; border-radius: 8px; margin-bottom: 4px; background: #2a2a3e; font-size: 13px; }
+  .task-item.done span { text-decoration: line-through; color: #555; }
+  .task-item input[type="checkbox"] { accent-color: #e74c3c; cursor: pointer; width: 16px; height: 16px; }
+  .task-item span { flex: 1; }
+  .task-item .del { background: none; border: none; color: #555; cursor: pointer; font-size: 14px; padding: 0 4px; }
+  .task-item .del:hover { color: #e74c3c; }
+  .settings { margin-bottom: 20px; }
+  .settings-toggle { background: none; border: 1px solid #333; color: #666; font-size: 11px; padding: 4px 12px; border-radius: 12px; cursor: pointer; font-family: inherit; }
+  .settings-toggle:hover { color: #fff; border-color: #888; }
+  .settings-panel { display: none; margin-top: 10px; background: #2a2a3e; padding: 12px 16px; border-radius: 10px; }
+  .settings-panel.open { display: block; }
+  .setting-row { display: flex; justify-content: space-between; align-items: center; margin: 6px 0; font-size: 12px; color: #aaa; }
+  .setting-row input { width: 60px; background: #1a1a2e; border: 1px solid #444; color: #fff; padding: 4px 8px; border-radius: 8px; text-align: center; font-size: 12px; font-family: inherit; }
+  .setting-row input:focus { outline: none; border-color: #888; }
+  .settings-panel button { margin-top: 8px; background: #444; border: none; color: #fff; padding: 6px 16px; border-radius: 12px; cursor: pointer; font-size: 11px; font-family: inherit; }
+  .settings-panel button:hover { background: #666; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Pomodoro</h1>
+  <div class="tabs">
+    <button class="tab active-work" onclick="setMode('work')">Focus</button>
+    <button class="tab" onclick="setMode('short')">Short Break</button>
+    <button class="tab" onclick="setMode('long')">Long Break</button>
+  </div>
+  <div class="task-input">
+    <input type="text" id="task" placeholder="Add a task..." onkeydown="if(event.key==='Enter')addTask()" />
+    <button onclick="addTask()">+</button>
+  </div>
+  <div class="task-list" id="task-list"></div>
+  <div class="settings">
+    <button class="settings-toggle" onclick="toggleSettings()">⚙️ Timer Settings</button>
+    <div class="settings-panel" id="settings-panel">
+      <div class="setting-row"><span>Focus (min)</span><input type="number" id="set-work" value="25" min="1" max="120"></div>
+      <div class="setting-row"><span>Short Break (min)</span><input type="number" id="set-short" value="5" min="1" max="60"></div>
+      <div class="setting-row"><span>Long Break (min)</span><input type="number" id="set-long" value="15" min="1" max="60"></div>
+      <button onclick="applySettings()">Apply</button>
+    </div>
+  </div>
+  <div class="timer-ring">
+    <svg width="280" height="280">
+      <circle class="ring-bg" cx="140" cy="140" r="130"></circle>
+      <circle class="ring-progress ring-work" id="ring" cx="140" cy="140" r="130"
+        stroke-dasharray="816.81" stroke-dashoffset="0"></circle>
+    </svg>
+    <div class="timer-text">
+      <div class="time" id="time">25:00</div>
+      <div class="label" id="label">Focus Time</div>
+    </div>
+  </div>
+  <div class="controls">
+    <button class="btn" onclick="resetTimer()" title="Reset">↺</button>
+    <button class="btn btn-start work" id="start-btn" onclick="toggleTimer()">START</button>
+    <button class="btn" onclick="skipTimer()" title="Skip">⏭</button>
+  </div>
+  <div class="sessions" id="sessions"></div>
+  <div class="stats"><span id="stats">0 sessions completed today</span> <button class="settings-toggle" onclick="resetSessions()" style="font-size:10px;padding:2px 8px;margin-left:4px">Reset</button></div>
+</div>
+
+<script>
+// ============================================================
+// CONFIGURATION
+// Default durations for each timer mode (in seconds).
+// These can be overridden by the user via the Settings panel.
+// ============================================================
+const MODES = {
+  work:  { time: 25 * 60, label: 'Focus Time',  color: 'work'  },
+  short: { time: 5 * 60,  label: 'Short Break',  color: 'short' },
+  long:  { time: 15 * 60, label: 'Long Break',   color: 'long'  },
+};
+
+// Circumference of the SVG ring (2πr, r=130) — used to animate the progress arc
+const CIRC = 2 * Math.PI * 130;
+
+// ============================================================
+// STATE VARIABLES
+// ============================================================
+let mode = 'work';                // Current timer mode: 'work', 'short', or 'long'
+let timeLeft = MODES.work.time;   // Seconds remaining in the current timer
+let totalTime = MODES.work.time;  // Total seconds for the current mode (used to calculate progress %)
+let running = false;              // Whether the timer is actively counting down
+let interval = null;              // Reference to the setInterval so we can clear it
+let sessionsCompleted = 0;        // Focus sessions completed in this browser session (resets on reload)
+let totalToday = parseInt(localStorage.getItem('pomo_today') || '0');  // Persistent daily session count
+let todayDate = localStorage.getItem('pomo_date') || '';               // Date string for daily reset
+
+// If the stored date doesn't match today, reset the daily counter
+const today = new Date().toDateString();
+if (todayDate !== today) { totalToday = 0; localStorage.setItem('pomo_date', today); }
+
+// ============================================================
+// MODE SWITCHING
+// Stops the timer (if running) and switches to the selected mode,
+// resetting the countdown to that mode's full duration.
+// ============================================================
+function setMode(m) {
+  if (running) toggleTimer();  // Stop the timer before switching
+  mode = m;
+  timeLeft = MODES[m].time;
+  totalTime = MODES[m].time;
+  updateDisplay();
+  updateTabs();
+  updateRing();
+}
+
+// ============================================================
+// UI UPDATE FUNCTIONS
+// ============================================================
+
+// Updates the MM:SS display and the browser tab title
+function updateDisplay() {
+  const min = Math.floor(timeLeft / 60);
+  const sec = timeLeft % 60;
+  document.getElementById('time').textContent =
+    String(min).padStart(2, '0') + ':' + String(sec).padStart(2, '0');
+  document.getElementById('label').textContent = MODES[mode].label;
+  // Show remaining time in the browser tab so user can see it when tabbed away
+  document.title = `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')} - Pomodoro`;
+}
+
+// Highlights the active tab button, colors the start button and ring to match the current mode
+function updateTabs() {
+  // Reset all tabs to inactive
+  document.querySelectorAll('.tab').forEach(t => t.className = 'tab');
+  const tabs = document.querySelectorAll('.tab');
+  tabs[0].className = mode === 'work'  ? 'tab active-work'  : 'tab';
+  tabs[1].className = mode === 'short' ? 'tab active-short' : 'tab';
+  tabs[2].className = mode === 'long'  ? 'tab active-long'  : 'tab';
+
+  // Update start/pause button color based on mode or running state
+  const btn = document.getElementById('start-btn');
+  btn.className = `btn btn-start ${running ? 'running' : MODES[mode].color}`;
+
+  // Update the SVG ring's stroke color to match the current mode
+  const ring = document.getElementById('ring');
+  ring.className = `ring-progress ring-${MODES[mode].color}`;
+}
+
+// Animates the circular progress ring by adjusting the SVG stroke-dashoffset
+function updateRing() {
+  const pct = timeLeft / totalTime;          // Fraction of time remaining (1.0 = full, 0 = empty)
+  const offset = CIRC * (1 - pct);           // Offset the dash to reveal the progress arc
+  document.getElementById('ring').style.strokeDashoffset = offset;
+}
+
+// Renders the 4 session dots (filled for completed, empty for remaining in the current set of 4)
+function updateSessions() {
+  let html = '';
+  for (let i = 0; i < 4; i++) {
+    html += `<div class="dot ${i < sessionsCompleted % 4 ? 'done' : ''}"></div>`;
+  }
+  document.getElementById('sessions').innerHTML = html;
+  document.getElementById('stats').textContent = `${totalToday} session${totalToday !== 1 ? 's' : ''} completed today`;
+}
+
+// ============================================================
+// TIMER CONTROLS
+// ============================================================
+
+// Toggles the timer between running (START) and paused (PAUSE)
+function toggleTimer() {
+  if (running) {
+    clearInterval(interval);
+    running = false;
+    document.getElementById('start-btn').textContent = 'START';
+  } else {
+    running = true;
+    document.getElementById('start-btn').textContent = 'PAUSE';
+    interval = setInterval(tick, 1000);  // Fire every 1 second
+  }
+  updateTabs();
+}
+
+// Called every second by setInterval while the timer is running.
+// Decrements the timer, and when it reaches 0, plays an alarm
+// and auto-switches to the next mode (work → break or break → work).
+function tick() {
+  timeLeft--;
+  if (timeLeft < 0) {
+    clearInterval(interval);
+    running = false;
+    playAlarm();
+
+    // After a focus session, increment counters and switch to a break
+    if (mode === 'work') {
+      sessionsCompleted++;
+      totalToday++;
+      localStorage.setItem('pomo_today', totalToday);
+      // Every 4th session gets a long break instead of a short break
+      if (sessionsCompleted % 4 === 0) setMode('long');
+      else setMode('short');
+    } else {
+      // After a break, go back to focus mode
+      setMode('work');
+    }
+    updateSessions();
+    return;
+  }
+  updateDisplay();
+  updateRing();
+}
+
+// Resets the current timer back to full duration without changing the mode
+function resetTimer() {
+  if (running) toggleTimer();  // Stop first
+  timeLeft = MODES[mode].time;
+  totalTime = MODES[mode].time;
+  updateDisplay();
+  updateRing();
+}
+
+// Skips the current timer entirely and moves to the next mode
+// (counts as a completed session if skipping a focus period)
+function skipTimer() {
+  if (running) toggleTimer();
+  if (mode === 'work') {
+    sessionsCompleted++;
+    totalToday++;
+    localStorage.setItem('pomo_today', totalToday);
+    if (sessionsCompleted % 4 === 0) setMode('long');
+    else setMode('short');
+  } else {
+    setMode('work');
+  }
+  updateSessions();
+}
+
+// ============================================================
+// ALARM & NOTIFICATIONS
+// Plays a short 5-note chime using the Web Audio API and sends
+// a browser notification (if permission was granted).
+// ============================================================
+function playAlarm() {
+  try {
+    const actx = new (window.AudioContext || window.webkitAudioContext)();
+    const notes = [523, 659, 784, 659, 523];  // C5, E5, G5, E5, C5 — a simple chime
+    notes.forEach((freq, i) => {
+      const osc = actx.createOscillator();     // Generates the tone
+      const gain = actx.createGain();          // Controls volume fade-out
+      osc.connect(gain); gain.connect(actx.destination);
+      osc.frequency.value = freq;
+      osc.type = 'sine';
+      // Each note plays for 0.3s with a quick fade-out, staggered by 0.25s
+      gain.gain.setValueAtTime(0.15, actx.currentTime + i * 0.25);
+      gain.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + i * 0.25 + 0.3);
+      osc.start(actx.currentTime + i * 0.25);
+      osc.stop(actx.currentTime + i * 0.25 + 0.3);
+    });
+  } catch (e) {}
+
+  // Send a desktop notification if the user granted permission
+  if (Notification.permission === 'granted') {
+    new Notification('Pomodoro', { body: mode === 'work' ? 'Focus session complete! Take a break.' : 'Break over! Time to focus.' });
+  }
+}
+
+// Ask for notification permission on first load (only if not already decided)
+if ('Notification' in window && Notification.permission === 'default') {
+  Notification.requestPermission();
+}
+
+// ============================================================
+// TASK LIST
+// Tasks are stored in localStorage as a JSON array of { text, done } objects.
+// Users can add, check off (cross out), and delete tasks.
+// ============================================================
+let tasks = JSON.parse(localStorage.getItem('pomo_tasks') || '[]');
+
+// Re-renders the entire task list and saves to localStorage
+function renderTasks() {
+  const el = document.getElementById('task-list');
+  el.innerHTML = tasks.map((t, i) =>
+    `<div class="task-item ${t.done ? 'done' : ''}">
+      <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTask(${i})">
+      <span>${t.text}</span>
+      <button class="del" onclick="deleteTask(${i})">✕</button>
+    </div>`
+  ).join('');
+  localStorage.setItem('pomo_tasks', JSON.stringify(tasks));
+}
+
+// Reads the input field, creates a new task, and re-renders
+function addTask() {
+  const input = document.getElementById('task');
+  const text = input.value.trim();
+  if (!text) return;
+  tasks.push({ text, done: false });
+  input.value = '';
+  renderTasks();
+}
+
+// check off that a task is done. 
+function toggleTask(i) {
+  tasks[i].done = !tasks[i].done;
+  renderTasks();
+}
+
+// Removes a task from the list entirely
+function deleteTask(i) {
+  tasks.splice(i, 1);
+  renderTasks();
+}
+
+// ============================================================
+// SETTINGS PANEL
+// Allows the user to customize focus/break durations.
+// Custom durations are saved to localStorage and restored on reload.
+// ============================================================
+
+// Toggles the settings panel open/closed
+function toggleSettings() {
+  document.getElementById('settings-panel').classList.toggle('open');
+}
+
+// this basically allows u to use ur own settings and save. 
+function applySettings() {
+  const w = parseInt(document.getElementById('set-work').value) || 25;   // Focus minutes
+  const s = parseInt(document.getElementById('set-short').value) || 5;   // Short break minutes
+  const l = parseInt(document.getElementById('set-long').value) || 15;   // Long break minutes
+  MODES.work.time = w * 60;   // Convert minutes to seconds
+  MODES.short.time = s * 60;
+  MODES.long.time = l * 60;
+  localStorage.setItem('pomo_settings', JSON.stringify({ work: w, short: s, long: l }));
+  setMode(mode);  // Re-apply current mode with new duration
+  document.getElementById('settings-panel').classList.remove('open');
+}
+
+// Restore saved settings from localStorage on page load
+const savedSettings = JSON.parse(localStorage.getItem('pomo_settings') || 'null');
+if (savedSettings) {
+  MODES.work.time = savedSettings.work * 60;
+  MODES.short.time = savedSettings.short * 60;
+  MODES.long.time = savedSettings.long * 60;
+  document.getElementById('set-work').value = savedSettings.work;
+  document.getElementById('set-short').value = savedSettings.short;
+  document.getElementById('set-long').value = savedSettings.long;
+  timeLeft = MODES[mode].time;
+  totalTime = MODES[mode].time;
+}
+
+// ============================================================
+// SESSION RESET
+// Resets both the in-memory and localStorage session counters to 0
+// ============================================================
+function resetSessions() {
+  sessionsCompleted = 0;
+  totalToday = 0;
+  localStorage.setItem('pomo_today', '0');
+  updateSessions();
+}
+
+// ============================================================
+// INITIALIZATION
+// Render all UI components on page load
+// ============================================================
+renderTasks();
+updateDisplay();
+updateRing();
+updateSessions();
+updateTabs();
+</script>
+</body>
+</html>

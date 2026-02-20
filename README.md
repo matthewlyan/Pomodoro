@@ -19,6 +19,8 @@ A clean, browser-based Pomodoro timer with task tracking, customizable durations
 - **Timer Resume** — Running timer state is restored after page reload
 - **Keyboard Shortcuts** — Space (start/pause), R (reset), N (skip)
 - **Tab Title** — Shows remaining time in the browser tab
+- **Study Metrics** — 7-day bar chart, streaks, weekly goal tracking with progress bar
+- **Animated Background** — Subtle floating particle animation for a calming focus environment
 
 ## How to Use
 
@@ -57,10 +59,12 @@ pomodoro/
 ├── css/
 │   └── styles.css      # All styling
 └── js/
+    ├── background.js   # Animated particle background
     ├── timer.js        # Core logic (modes, countdown, alarm)
     ├── ui.js           # DOM updates (display, tabs, ring, sessions)
     ├── tasks.js        # Task list (add, check off, delete)
     ├── settings.js     # Custom timer durations
+    ├── metrics.js      # Study metrics, streaks & weekly goal tracking
     └── app.js          # Initialization
 ```
 

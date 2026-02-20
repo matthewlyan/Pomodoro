@@ -26,6 +26,10 @@ let endTime = null;               // UNIX ms timestamp when the current run ends
 let sessionsCompleted = 0;        // Focus sessions completed in this browser session
 let timerStateRestored = false;   // Whether timer mode/progress came from persisted state
 
+// Auto-start and sound preferences
+let autoStartEnabled = localStorage.getItem('pomo_autostart') === 'true';
+let soundEnabled = localStorage.getItem('pomo_sound') !== 'false';
+
 // Persistent daily session count (survives page reloads)
 let totalToday = parseInt(localStorage.getItem('pomo_today') || '0');
 let todayDate = localStorage.getItem('pomo_date') || '';
@@ -119,7 +123,7 @@ function completeFocusSession() {
 }
 
 function handleTimerEnd(playSound) {
-  if (playSound) playAlarm();
+  if (playSound && soundEnabled) playAlarm();
 
   if (mode === 'work') {
     completeFocusSession();
@@ -130,6 +134,10 @@ function handleTimerEnd(playSound) {
   }
   updateSessions();
   saveTimerState();
+
+  if (autoStartEnabled) {
+    setTimeout(() => toggleTimer(), 500);
+  }
 }
 
 // ============================================================
@@ -229,6 +237,7 @@ function resetSessions() {
 // Plays a 5-note chime via Web Audio API and sends a desktop notification.
 // ============================================================
 function playAlarm() {
+  if (!soundEnabled) return;
   try {
     const actx = new (window.AudioContext || window.webkitAudioContext)();
     const notes = [523, 659, 784, 659, 523];  // C5, E5, G5, E5, C5

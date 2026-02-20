@@ -28,7 +28,7 @@ function updateTabs() {
 
   // Update SVG ring stroke color
   const ring = document.getElementById('ring');
-  ring.className = `ring-progress ring-${MODES[mode].color}`;
+  ring.setAttribute('class', `ring-progress ring-${MODES[mode].color}`);
 }
 
 // Animates the circular progress ring via SVG stroke-dashoffset

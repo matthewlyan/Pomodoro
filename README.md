@@ -13,8 +13,9 @@ A clean, browser-based Pomodoro timer with task tracking, customizable durations
 - **Task List** — Add tasks, check them off, delete them, drag to reorder
 - **Progress Ring** — Animated circular countdown with color-coded modes
 - **Session Tracking** — Daily session counter with reset button
-- **Sound Alarm** — 5-note chime when the timer ends
+- **Sound Alarm** — 5-note chime when the timer ends (with mute toggle)
 - **Desktop Notifications** — Get notified even when the tab is in the background
+- **Auto-Start** — Optionally auto-start the next timer after one finishes
 - **Persistent State** — Tasks, settings, and daily session count saved via localStorage
 - **Timer Resume** — Running timer state is restored after page reload
 - **Keyboard Shortcuts** — Space (start/pause), R (reset), N (skip)

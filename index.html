@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pomodoro Timer</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍅</text></svg>">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -56,6 +58,18 @@
     <button class="btn" onclick="skipTimer()" title="Skip (N)" aria-label="Skip to next mode">⏭</button>
   </div>
   <div class="shortcut-hint">Shortcuts: Space start/pause, R reset, N skip</div>
+
+  <!-- Toggle options -->
+  <div class="toggle-options">
+    <label class="toggle-label">
+      <input type="checkbox" id="auto-start-toggle" onchange="toggleAutoStart()">
+      <span>Auto-start next timer</span>
+    </label>
+    <label class="toggle-label">
+      <input type="checkbox" id="sound-toggle" checked onchange="toggleSound()">
+      <span>🔔 Sound</span>
+    </label>
+  </div>
 
   <!-- Session dots & stats -->
   <div class="sessions" id="sessions"></div>

@@ -81,6 +81,13 @@ svg { transform: rotate(-90deg); }
 .btn-start.long { border-color: #2980b9; }
 .btn-start.long:hover { background: #2980b9; }
 .btn-start.running { background: #444; border-color: #444; }
+.shortcut-hint {
+  font-size: 10px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #555;
+  margin: -14px 0 20px;
+}
 
 /* ============================================================
    SESSION DOTS & STATS

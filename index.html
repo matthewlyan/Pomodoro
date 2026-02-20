@@ -51,10 +51,11 @@
 
   <!-- Controls -->
   <div class="controls">
-    <button class="btn" onclick="resetTimer()" title="Reset">↺</button>
-    <button class="btn btn-start work" id="start-btn" onclick="toggleTimer()">START</button>
-    <button class="btn" onclick="skipTimer()" title="Skip">⏭</button>
+    <button class="btn" onclick="resetTimer()" title="Reset (R)" aria-label="Reset timer">↺</button>
+    <button class="btn btn-start work" id="start-btn" onclick="toggleTimer()" aria-label="Start or pause timer">START</button>
+    <button class="btn" onclick="skipTimer()" title="Skip (N)" aria-label="Skip to next mode">⏭</button>
   </div>
+  <div class="shortcut-hint">Shortcuts: Space start/pause, R reset, N skip</div>
 
   <!-- Session dots & stats -->
   <div class="sessions" id="sessions"></div>

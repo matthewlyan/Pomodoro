@@ -4,13 +4,19 @@
 
 let tasks = JSON.parse(localStorage.getItem('pomo_tasks') || '[]');
 
+function escapeHtml(text) {
+  return String(text).replace(/[&<>"']/g, (char) => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]
+  ));
+}
+
 // Re-renders the entire task list and saves to localStorage
 function renderTasks() {
   const el = document.getElementById('task-list');
   el.innerHTML = tasks.map((t, i) =>
     `<div class="task-item ${t.done ? 'done' : ''}">
       <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTask(${i})">
-      <span>${t.text}</span>
+      <span>${escapeHtml(t.text)}</span>
       <button class="del" onclick="deleteTask(${i})">✕</button>
     </div>`
   ).join('');

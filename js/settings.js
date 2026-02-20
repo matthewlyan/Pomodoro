@@ -7,11 +7,25 @@ function toggleSettings() {
   document.getElementById('settings-panel').classList.toggle('open');
 }
 
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function readMinutes(id, fallback, min, max) {
+  const raw = parseInt(document.getElementById(id).value, 10);
+  return clamp(Number.isFinite(raw) ? raw : fallback, min, max);
+}
+
 // Reads input fields, updates MODES durations, saves to localStorage, resets current timer
 function applySettings() {
-  const w = parseInt(document.getElementById('set-work').value) || 25;   // Focus minutes
-  const s = parseInt(document.getElementById('set-short').value) || 5;   // Short break minutes
-  const l = parseInt(document.getElementById('set-long').value) || 15;   // Long break minutes
+  const w = readMinutes('set-work', 25, 1, 120);   // Focus minutes
+  const s = readMinutes('set-short', 5, 1, 60);    // Short break minutes
+  const l = readMinutes('set-long', 15, 1, 60);    // Long break minutes
+
+  document.getElementById('set-work').value = w;
+  document.getElementById('set-short').value = s;
+  document.getElementById('set-long').value = l;
+
   MODES.work.time = w * 60;
   MODES.short.time = s * 60;
   MODES.long.time = l * 60;
@@ -24,13 +38,23 @@ function applySettings() {
 function loadSettings() {
   const saved = JSON.parse(localStorage.getItem('pomo_settings') || 'null');
   if (saved) {
-    MODES.work.time = saved.work * 60;
-    MODES.short.time = saved.short * 60;
-    MODES.long.time = saved.long * 60;
-    document.getElementById('set-work').value = saved.work;
-    document.getElementById('set-short').value = saved.short;
-    document.getElementById('set-long').value = saved.long;
-    timeLeft = MODES[mode].time;
-    totalTime = MODES[mode].time;
+    const w = clamp(parseInt(saved.work, 10) || 25, 1, 120);
+    const s = clamp(parseInt(saved.short, 10) || 5, 1, 60);
+    const l = clamp(parseInt(saved.long, 10) || 15, 1, 60);
+    MODES.work.time = w * 60;
+    MODES.short.time = s * 60;
+    MODES.long.time = l * 60;
+    document.getElementById('set-work').value = w;
+    document.getElementById('set-short').value = s;
+    document.getElementById('set-long').value = l;
+
+    // If a specific timer state was restored, preserve its remaining time.
+    if (!timerStateRestored) {
+      timeLeft = MODES[mode].time;
+      totalTime = MODES[mode].time;
+    } else {
+      totalTime = MODES[mode].time;
+      timeLeft = Math.min(timeLeft, totalTime);
+    }
   }
 }

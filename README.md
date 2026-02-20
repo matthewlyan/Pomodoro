@@ -16,6 +16,8 @@ A clean, browser-based Pomodoro timer with task tracking, customizable durations
 - **Sound Alarm** — 5-note chime when the timer ends
 - **Desktop Notifications** — Get notified even when the tab is in the background
 - **Persistent State** — Tasks, settings, and daily session count saved via localStorage
+- **Timer Resume** — Running timer state is restored after page reload
+- **Keyboard Shortcuts** — Space (start/pause), R (reset), N (skip)
 - **Tab Title** — Shows remaining time in the browser tab
 
 ## How to Use
@@ -35,6 +37,10 @@ A clean, browser-based Pomodoro timer with task tracking, customizable durations
 | **Focus / Short Break / Long Break** | Switch modes manually |
 | **⚙️ Timer Settings** | Customize durations |
 | **Reset** (next to session count) | Reset daily session counter |
+
+Notes:
+- Skipping a focus block does **not** count as a completed session.
+- Countdown timing is timestamp-based to stay accurate over long runs/background tab throttling.
 
 ### Task List
 

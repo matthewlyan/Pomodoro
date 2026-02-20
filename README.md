@@ -10,7 +10,7 @@ A clean, browser-based Pomodoro timer with task tracking, customizable durations
 
 - **Pomodoro Cycle** — 25 min focus → 5 min short break → repeat → 15 min long break after 4 sessions
 - **Customizable Timers** — Set your own focus and break durations (e.g. 50/10/15)
-- **Task List** — Add tasks, check them off, delete them
+- **Task List** — Add tasks, check them off, delete them, drag to reorder
 - **Progress Ring** — Animated circular countdown with color-coded modes
 - **Session Tracking** — Daily session counter with reset button
 - **Sound Alarm** — 5-note chime when the timer ends
@@ -49,6 +49,7 @@ Notes:
 - Type a task and press **Enter** or click **+**
 - Check the box to cross it off
 - Click **✕** to delete
+- Drag the **⠿** handle to reorder tasks
 
 ## Project Structure
 

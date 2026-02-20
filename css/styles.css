@@ -124,6 +124,12 @@ svg { transform: rotate(-90deg); }
 .task-item span { flex: 1; }
 .task-item .del { background: none; border: none; color: #555; cursor: pointer; font-size: 14px; padding: 0 4px; }
 .task-item .del:hover { color: #e74c3c; }
+.drag-handle {
+  cursor: grab; color: #555; font-size: 14px; user-select: none; line-height: 1;
+}
+.drag-handle:active { cursor: grabbing; }
+.task-item.dragging { opacity: 0.4; background: #333; }
+.task-item.drag-over { border-top: 2px solid #e74c3c; }
 
 /* ============================================================
    METRICS PANEL

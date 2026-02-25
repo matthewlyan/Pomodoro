@@ -2,6 +2,8 @@
 
 A clean, browser-based Pomodoro timer with task tracking, customizable durations, and session stats.
 
+🔗 **[Live Demo](https://matthewlyan.github.io/Pomodoro/)**
+
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
@@ -18,9 +20,8 @@ A clean, browser-based Pomodoro timer with task tracking, customizable durations
 - **Auto-Start** — Optionally auto-start the next timer after one finishes
 - **Persistent State** — Tasks, settings, and daily session count saved via localStorage
 - **Timer Resume** — Running timer state is restored after page reload
-- **Keyboard Shortcuts** — Space (start/pause), R (reset), N (skip)
 - **Tab Title** — Shows remaining time in the browser tab
-- **Study Metrics** — 7-day bar chart, streaks, weekly goal tracking with progress bar
+- **Study Metrics** — Focus minutes today and this week
 - **Animated Background** — Subtle floating particle animation for a calming focus environment
 
 ## How to Use
@@ -66,7 +67,7 @@ pomodoro/
     ├── ui.js           # DOM updates (display, tabs, ring, sessions)
     ├── tasks.js        # Task list (add, check off, delete)
     ├── settings.js     # Custom timer durations
-    ├── metrics.js      # Study metrics, streaks & weekly goal tracking
+    ├── metrics.js      # Study metrics (today & weekly focus time)
     └── app.js          # Initialization
 ```
 
